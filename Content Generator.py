@@ -3,7 +3,6 @@
 # Class: CS361
 # Description: This program generates text based off of inputted keywords
 
-import tkinter
 import requests as res
 import bs4 as bs
 
@@ -20,6 +19,11 @@ def create_url(keyword):
     wiki_url = "https://en.wikipedia.org/wiki/"
     wiki_url += keyword
     return wiki_url
+
+
+def parse_wiki_data(data, primary_keyword, secondary_keyword):
+    """Parse through Wiki page for paragraphs containing the secondary keyword"""
+    pass
 
 # text = "https://en.wikipedia.org/wiki/Kobe_Bryant"
 # req = res.get(text)
