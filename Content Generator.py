@@ -29,43 +29,44 @@ def parse_wiki_data(data, primary_keyword, secondary_keyword):
         print(p.contents[0])
 
 
+def generate_output():
+    """Generates the output text"""
+    pass
+
+
+def open_window():
+    """Opens the GUI"""
+    root = Tk()
+    root.title("Content Generator")
+
+    mainframe = ttk.Frame(root, padding="20 20 20 20")
+    mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(0, weight=1)
+
+    primary_keyword = StringVar()
+    primary_keyword_field = ttk.Entry(mainframe, width=20, textvariable=primary_keyword)
+    primary_keyword_field.grid(column=2, row=1, sticky=(W, E))
+
+    secondary_keyword = StringVar()
+    secondary_keyword_field = ttk.Entry(mainframe, width=20, textvariable=secondary_keyword)
+    secondary_keyword_field.grid(column=2, row=2, sticky=(W, E))
+
+    ttk.Button(mainframe, text="Generate", command=generate_output()).grid(column=3, row=3, sticky=W)
+    ttk.Label(mainframe, text="Primary Keyword").grid(column=1, row=1, sticky=W)
+    ttk.Label(mainframe, text="Secondary Keyword").grid(column=1, row=2, sticky=W)
+
+    ttk.Label(mainframe, text="Generated Text").grid(column=1, row=4, sticky=W)
+
+    for child in mainframe.winfo_children():
+        child.grid_configure(padx=5, pady=5)
+
+    primary_keyword_field.focus()
+    root.bind("<Return>", generate_output())
+
+    root.mainloop()
+
+
 url = create_url("Kobe_Bryant")
 wiki_data = request_html(url)
-
-def calculate(*args):
-    try:
-        value = float(feet.get())
-        meters.set(int(0.3048 * value * 10000.0 + 0.5)/10000.0)
-    except ValueError:
-        pass
-
-
-root = Tk()
-root.title("Content Generator")
-
-mainframe = ttk.Frame(root, padding="20 20 20 20")
-mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
-
-primary_keyword = StringVar()
-primary_keyword_field = ttk.Entry(mainframe, width=20, textvariable=primary_keyword)
-primary_keyword_field.grid(column=2, row=1, sticky=(W, E))
-
-secondary_keyword = StringVar()
-secondary_keyword_field = ttk.Entry(mainframe, width=20, textvariable=secondary_keyword)
-secondary_keyword_field.grid(column=2, row=2, sticky=(W, E))
-
-
-
-ttk.Button(mainframe, text="Generate", command=calculate).grid(column=3, row=3, sticky=W)
-ttk.Label(mainframe, text="Primary Keyword:").grid(column=1, row=1, sticky=W)
-ttk.Label(mainframe, text="Secondary Keyword:").grid(column=1, row=2, sticky=E)
-
-for child in mainframe.winfo_children():
-    child.grid_configure(padx=5, pady=5)
-
-primary_keyword_field.focus()
-root.bind("<Return>", calculate)
-
-root.mainloop()
+open_window()
