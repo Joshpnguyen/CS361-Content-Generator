@@ -32,7 +32,9 @@ def parse_wiki_data(data, primary_keyword, secondary_keyword):
             try:
                 if isinstance(c, bs.element.Tag):  # remove citation numbers from lines
                     if c.name == "sup":
-                        c.decompose()
+                        c.clear()
+                    elif secondary_keyword in c.contents[0]:  # check for secondary_keyword in the tag contents
+                        p_status = True
 
                 elif secondary_keyword in c.string:
                     p_status = True
@@ -44,14 +46,21 @@ def parse_wiki_data(data, primary_keyword, secondary_keyword):
             return
 
 
-def generate_output():
+def generate_output(p_keyword, s_keyword):
     """Generates the output text"""
-    pass
+    p_keyword = str(p_keyword)
+    s_keyword = str(s_keyword)
+
+    # print(p_keyword, s_keyword)
+
+    website_url = create_url(p_keyword)
+    wiki_data = request_html(website_url)
+    parse_wiki_data(wiki_data, p_keyword, s_keyword)
 
 
-def open_window():
+def open_window(root):
     """Opens the GUI"""
-    root = Tk()
+
     root.title("Content Generator")
 
     mainframe = ttk.Frame(root, padding="20 20 20 20")
@@ -67,7 +76,8 @@ def open_window():
     secondary_keyword_field = ttk.Entry(mainframe, width=20, textvariable=secondary_keyword)
     secondary_keyword_field.grid(column=2, row=2, sticky=(W, E))
 
-    ttk.Button(mainframe, text="Generate", command=generate_output()).grid(column=3, row=3, sticky=W)
+    ttk.Button(mainframe, text="Generate", command=generate_output(primary_keyword, secondary_keyword)).grid(
+        column=3, row=3, sticky=W)
     ttk.Label(mainframe, text="Primary Keyword").grid(column=1, row=1, sticky=W)
     ttk.Label(mainframe, text="Secondary Keyword").grid(column=1, row=2, sticky=W)
 
@@ -77,12 +87,11 @@ def open_window():
         child.grid_configure(padx=5, pady=5)
 
     primary_keyword_field.focus()
-    root.bind("<Return>", generate_output())
-
-    root.mainloop()
+    root.bind("<Return>", generate_output(primary_keyword.get(), secondary_keyword.get()))
 
 
-website_url = create_url("Kobe Bryant")
-wiki_data = request_html(website_url)
-parse_wiki_data(wiki_data, "Kobe Bryant", "15-time")
-# open_window()
+root = Tk()
+open_window(root)
+root.mainloop()
+
+# generate_output("Kobe Bryant", "All-Star")
