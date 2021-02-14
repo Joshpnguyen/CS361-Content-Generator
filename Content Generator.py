@@ -9,9 +9,9 @@ import requests as res
 import bs4 as bs
 
 
-def request_html(url):
+def request_html(keyword):
     """Requests the HTML from the Wiki page"""
-    request = res.get(url)
+    request = res.get(keyword)
     wiki_html = bs.BeautifulSoup(request.text, "html.parser")
     return wiki_html
 
@@ -25,8 +25,23 @@ def create_url(keyword):
 
 def parse_wiki_data(data, primary_keyword, secondary_keyword):
     """Parse through Wiki page for paragraphs containing the secondary keyword"""
-    for p in wiki_data.find_all("p", limit=5):
-        print(p.contents[0])
+    p_status = False
+
+    for p in data.find_all("p"):
+        for c in p:  # go through contents of paragraph looking for secondary_keyword
+            try:
+                if isinstance(c, bs.element.Tag):  # remove citation numbers from lines
+                    if c.name == "sup":
+                        c.decompose()
+
+                elif secondary_keyword in c.string:
+                    p_status = True
+            except TypeError:
+                continue
+
+        if p_status:
+            print(p.get_text())
+            return
 
 
 def generate_output():
@@ -67,6 +82,7 @@ def open_window():
     root.mainloop()
 
 
-url = create_url("Kobe_Bryant")
-wiki_data = request_html(url)
-open_window()
+website_url = create_url("Kobe Bryant")
+wiki_data = request_html(website_url)
+parse_wiki_data(wiki_data, "Kobe Bryant", "15-time")
+# open_window()
