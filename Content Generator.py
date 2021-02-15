@@ -98,9 +98,15 @@ def parse_input_csv(csv_data):
 
 def generate_output_csv(keywords):
     """Reads in keywords to call parse_wiki_data, then writes to output.csv"""
-    for k, v in keywords.items():
-        print(k, v)
+    with open('output.csv', mode='w') as csv_file:
+        header_names = ["input_keywords", "output_content"]
+        writer = csv.DictWriter(csv_file, fieldnames=header_names)
 
+        writer.writeheader()
+
+        for k, v in keywords.items():
+            wiki_page = request_html(k)
+            writer.writerow({"input_keywords": k + ";" + v, "output_content": parse_wiki_data(wiki_page, k, v)})
 
 
 if len(sys.argv) > 1:
