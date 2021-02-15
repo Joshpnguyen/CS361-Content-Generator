@@ -7,15 +7,20 @@ from tkinter import *
 from tkinter import ttk
 import requests as res
 import bs4 as bs
-import csv
 
 
 def request_html(keyword):
     """Requests the HTML from the Wiki page"""
-    wiki_url = "https://en.wikipedia.org/wiki/" + keyword  # create wiki URL
-    request = res.get(wiki_url)
-    wiki_html = bs.BeautifulSoup(request.text, "html.parser")  # get HTML from site
+    request = res.get(keyword)
+    wiki_html = bs.BeautifulSoup(request.text, "html.parser")
     return wiki_html
+
+
+def create_url(keyword):
+    """Attach keyword into URL format"""
+    wiki_url = "https://en.wikipedia.org/wiki/"
+    wiki_url += keyword
+    return wiki_url
 
 
 def parse_wiki_data(data, primary_keyword, secondary_keyword):
@@ -37,7 +42,8 @@ def generate_output(p_keyword, s_keyword, result):
     p_keyword = str(p_keyword)
     s_keyword = str(s_keyword)
 
-    wiki_data = request_html(p_keyword)
+    website_url = create_url(p_keyword)
+    wiki_data = request_html(website_url)
     result.set(parse_wiki_data(wiki_data, p_keyword, s_keyword))
 
 
@@ -89,25 +95,4 @@ def open_gui():
     root.mainloop()
 
 
-def parse_input_csv(csv_data):
-    """Parses through the CSV file for the keywords and returns the keywords as a dictionary"""
-    raw_data = [line.split(";") for line in csv_data.split("\n")]
-    raw_data = raw_data[1:]
-    return dict(raw_data)  # format = {primary keyword:secondary keyword}
-
-
-def generate_output_csv(keywords):
-    """Reads in keywords to call parse_wiki_data, then writes to output.csv"""
-    for k, v in keywords.items():
-        print(k, v)
-
-
-
-if len(sys.argv) > 1:
-    with open(sys.argv[1], 'r') as f:
-        contents = f.read()
-    keyword_dict = parse_input_csv(contents)
-    generate_output_csv(keyword_dict)
-
-else:
-    open_gui()
+open_gui()
