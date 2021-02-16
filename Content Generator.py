@@ -66,6 +66,12 @@ def open_gui():
     ttk.Button(mainframe, text="Generate",
                command=lambda: generate_output(primary_keyword.get(), secondary_keyword.get(), result)).grid(
                 column=3, row=3, sticky=W)
+
+    # Create "Download Output" button
+    ttk.Button(mainframe, text="Download Output",
+               command= lambda: download_output(primary_keyword.get(), secondary_keyword.get())).grid(
+                column=2, row=3, sticky=E)
+
     # Create field labels for Primary & Secondary Keyword
     ttk.Label(mainframe, text="Primary Keyword").grid(column=1, row=1, sticky=W)
     ttk.Label(mainframe, text="Secondary Keyword").grid(column=1, row=2, sticky=W)
@@ -89,6 +95,12 @@ def open_gui():
     root.mainloop()
 
 
+def download_output(p_key, s_key):
+    """Takes the keywords and places them into a dict. Generates output.csv using generate_output_csv()"""
+    keyword_dictionary = {p_key: s_key}
+    generate_output_csv(keyword_dictionary)
+
+
 def parse_input_csv(csv_data):
     """Parses through the CSV file for the keywords and returns the keywords as a dictionary"""
     raw_data = [line.split(";") for line in csv_data.split("\n")]
@@ -97,7 +109,7 @@ def parse_input_csv(csv_data):
 
 
 def generate_output_csv(keywords):
-    """Reads in keywords to call parse_wiki_data, then writes to output.csv"""
+    """Reads in dictionary of keywords to call parse_wiki_data, then writes to output.csv"""
     with open('output.csv', mode='w') as csv_file:
         header_names = ["input_keywords", "output_content"]
         writer = csv.DictWriter(csv_file, fieldnames=header_names)
