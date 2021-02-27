@@ -1,5 +1,5 @@
 # Name: Josh Nguyen
-# Date: 2/14/2021
+# Date: 2/28/2021
 # Class: CS361
 # Description: This program generates text based off of inputted keywords.
 
@@ -12,7 +12,7 @@ import csv
 
 def request_html(keyword):
     """Requests the HTML from the Wiki page"""
-    wiki_url = "https://en.wikipedia.org/wiki/" + keyword  # create wiki URL
+    wiki_url = "https://en.wikipedia.org/wiki/" + keyword
     request = res.get(wiki_url)
     wiki_html = bs.BeautifulSoup(request.text, "html.parser")  # get HTML from site
     return wiki_html
