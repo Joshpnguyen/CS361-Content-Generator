@@ -69,8 +69,6 @@ def create_field_labels(mainframe):
     ttk.Label(mainframe, text="Generated Text").grid(column=1, row=4, sticky=W)
 
 
-
-
 def create_window_frame(root):
     """Create the window and frame"""
     root.title("Content Generator")
