@@ -143,11 +143,12 @@ def generate_output_csv(keywords):
             writer.writerow({"input_keywords": k + ";" + v, "output_content": parse_wiki_data(wiki_page, k, v)})
 
 
-if len(sys.argv) > 1:
-    with open(sys.argv[1], 'r') as f:
-        contents = f.read()
-    keyword_dict = parse_input_csv(contents)
-    generate_output_csv(keyword_dict)
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        with open(sys.argv[1], 'r') as f:
+            contents = f.read()
+        keyword_dict = parse_input_csv(contents)
+        generate_output_csv(keyword_dict)
 
-else:
-    open_gui()
+    else:
+        open_gui()
